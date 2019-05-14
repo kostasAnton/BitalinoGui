@@ -1,0 +1,15 @@
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\bin\x86\Debug\BitalinoGui.exe.config
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\bin\x86\Debug\BitalinoGui.exe
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\bin\x86\Debug\BitalinoGui.pdb
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\bin\x86\Debug\plux.dll
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\bin\x86\Debug\plux.xml
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x86\Debug\Interop.MediaPlayer.dll
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x86\Debug\BitalinoGui.csproj.ResolveComReference.cache
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x86\Debug\BitalinoGui.SensorForm.resources
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x86\Debug\BitalinoGui.Properties.Resources.resources
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x86\Debug\BitalinoGui.csproj.GenerateResource.cache
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x86\Debug\BitalinoGui.csproj.CoreCompileInputs.cache
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x86\Debug\BitalinoGui.csproj.CopyComplete
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x86\Debug\BitalinoGui.exe
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x86\Debug\BitalinoGui.pdb
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x86\Debug\BitalinoGui.csprojAssemblyReference.cache

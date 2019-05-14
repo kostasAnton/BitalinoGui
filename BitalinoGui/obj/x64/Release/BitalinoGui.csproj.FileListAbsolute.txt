@@ -1,0 +1,9 @@
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\bin\x64\Release\BitalinoGui.exe.config
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\bin\x64\Release\BitalinoGui.exe
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\bin\x64\Release\BITalino_x64.dll
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x64\Release\BitalinoGui.Form1.resources
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x64\Release\BitalinoGui.Properties.Resources.resources
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x64\Release\BitalinoGui.csproj.GenerateResource.cache
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x64\Release\BitalinoGui.csproj.CoreCompileInputs.cache
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x64\Release\BitalinoGui.csproj.CopyComplete
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x64\Release\BitalinoGui.exe

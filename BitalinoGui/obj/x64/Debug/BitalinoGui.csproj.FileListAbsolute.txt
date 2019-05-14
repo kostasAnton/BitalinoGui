@@ -1,0 +1,17 @@
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\bin\x64\Debug\BitalinoGui.exe.config
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\bin\x64\Debug\BitalinoGui.exe
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\bin\x64\Debug\BitalinoGui.pdb
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\bin\x64\Debug\plux.dll
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\bin\x64\Debug\plux.xml
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x64\Debug\Interop.MediaPlayer.dll
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x64\Debug\BitalinoGui.csproj.ResolveComReference.cache
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x64\Debug\BitalinoGui.AboutBoxItem.resources
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x64\Debug\BitalinoGui.ChartControl.resources
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x64\Debug\BitalinoGui.SensorForm.resources
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x64\Debug\BitalinoGui.Properties.Resources.resources
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x64\Debug\BitalinoGui.csproj.GenerateResource.cache
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x64\Debug\BitalinoGui.csproj.CoreCompileInputs.cache
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x64\Debug\BitalinoGui.csproj.CopyComplete
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x64\Debug\BitalinoGui.exe
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x64\Debug\BitalinoGui.pdb
+C:\Users\kostas\Desktop\BitalinoGui\BitalinoGui\obj\x64\Debug\BitalinoGui.csprojAssemblyReference.cache
