@@ -73,9 +73,9 @@ namespace BitalinoGui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Capture {
+        internal static System.Drawing.Bitmap bu_logo {
             get {
-                object obj = ResourceManager.GetObject("Capture", resourceCulture);
+                object obj = ResourceManager.GetObject("bu_logo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -86,16 +86,6 @@ namespace BitalinoGui.Properties {
         internal static System.Drawing.Bitmap refresh_image {
             get {
                 object obj = ResourceManager.GetObject("refresh-image", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap refresh_image1 {
-            get {
-                object obj = ResourceManager.GetObject("refresh-image1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
