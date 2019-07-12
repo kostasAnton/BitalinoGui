@@ -99,7 +99,7 @@ namespace BitalinoGui.Controls
         }
 
         private void getMaximumValueWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
+        { 
             joystick_to_get_maximum_value.setMaximumValue(getMaximum());
             returnGuiToInitialState();
             max_state = false;

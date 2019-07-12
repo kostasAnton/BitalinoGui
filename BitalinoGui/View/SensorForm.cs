@@ -10,6 +10,10 @@ using BitalinoGui.Model;
 using BitalinoGui.View;
 using BitalinoGui.Controls;
 using BitalinoGui.Controller;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Threading;
 
 namespace BitalinoGui
 {
@@ -30,21 +34,27 @@ namespace BitalinoGui
         //a simple counter for songs
         private short counter_for_songs = 0;
         //Sam form in case we want to have real time emotion's assesment
-        Sam_Form samForm = new Sam_Form();
+        private Sam_Form samForm = new Sam_Form();
         //this controller is responsible for devices ..Bitalino/Joystick
-        DeviceController dev_controller;
+        private DeviceController dev_controller;
         //A controller who knows the appropriate detective to get the job done
         //The mighty detective will detect bitalino and joystick devices around you.
-        DetectiveController det_controller;
+        private DetectiveController det_controller;
+        //A controller which is responsible for camera handling
+        private CameraController camcontroller;
+        //Information about the ena of a song
+
         public SensorForm()
         {
             InitializeComponent();
            
             fillFreqComboBox();
             saveExportedFileDialog.Filter = "Text File | *.txt";
+            saveExportedFileDialog.Title = "Choose path to save sensor's output.";
             button3.Enabled = true;
             button1.Enabled = false;
             button2.Enabled = false;
+      
             mucisDialog.Multiselect = true;
             det_controller = new DetectiveController(this, new splashForm());
             det_controller.initialDetection();
@@ -85,11 +95,25 @@ namespace BitalinoGui
                     buildCharts();
                     macSelected = macListBox.SelectedItem.ToString();
                     int frequency = Convert.ToInt32(frequenciesComboBox.SelectedItem);
+                    camcontroller = new CameraController(this);
                     MyDevice dev = new MyDevice(macSelected, channelsList, frequency);
-                    dev_controller = new DeviceController(dev, deviceWorker);
+                    dev_controller = new DeviceController(dev, deviceWorker,camcontroller);
                     check_Joystick_Annotation_Capability();
                     button2.Enabled = true;
                     button3.Enabled = true;
+                    if (intelCameraCbox.Checked && det_controller.getDetectiveMonk().intelRealSenseCam_Connected())
+                    {
+                        camcontroller.getCamera().setSavePath(getPathToSaveCamFrames());
+                        camcontroller.setrecordedBitamps(new ArrayList());
+                        Console.WriteLine("Output from camera before starting it with bitalino" + camcontroller.getRecorderBitamaps().Count.ToString());
+                        camcontroller.loopCamera_Frames();
+                    }
+                    else if(intelCameraCbox.Checked && !det_controller.getDetectiveMonk().intelRealSenseCam_Connected())
+                    {
+                        MessageBox.Show("Intel Real Sense Camera not detected.Please connect it.", "An error has occured",
+                       MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
                     deviceWorker.RunWorkerAsync();
                 }
                 catch (Exception exc)
@@ -158,6 +182,8 @@ namespace BitalinoGui
         {
             //dev.Start(dev.getFreq(), dev.getChannelsList(), 16);
             //dev.loop();
+            //Researcher has 1 minute to leave the room.
+
             dev_controller.loop();
             e.Cancel = true;
         }
@@ -264,7 +290,9 @@ namespace BitalinoGui
         */
         private void deviceWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            MessageBox.Show("Completed");
+            //MessageBox.Show("Completed");
+            exportTextFile();
+            camcontroller.cancelCameraRecording();
             exportOutputToolStripMenuItem.Visible = true;
         }
 
@@ -343,9 +371,9 @@ namespace BitalinoGui
                 st.Start();
                 dev_controller.sendInterrupt(false);
                 counter_for_songs++;
-                while (st.ElapsedMilliseconds<10000)
+                while (st.ElapsedMilliseconds<45000)
                 {
-                    if (st.ElapsedMilliseconds>10000)
+                    if (st.ElapsedMilliseconds>45000)
                     {
                         st.Reset();
                         break;
@@ -357,6 +385,7 @@ namespace BitalinoGui
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
+        
             musicListBox.SelectedItem = musicListBox.Items[e.ProgressPercentage];
         }
 
@@ -375,30 +404,35 @@ namespace BitalinoGui
             outPutListBox.SelectedIndex = musicListBox.Items.Count - 1;
         }
 
-        private void exportOutputToolStripMenuItem_Click(object sender, EventArgs e)
+        private void exportTextFile()
         {
-            
             ArrayList toExport = dev_controller.getExportValues();
-            int[,] exportValues = new int[toExport.Count,11];
+            int[,] exportValues = new int[toExport.Count, 11];
             int count_ExportedValues = 0;
             int counter_data = 0;
-            foreach(FrameAdapter_Joystick frame in toExport)
+            foreach (FrameAdapter_Joystick frame in toExport)
             {
                 //place the values of joystick first
-                exportValues[count_ExportedValues, 8]= frame.getX_axis();
+                exportValues[count_ExportedValues, 8] = frame.getX_axis();
                 exportValues[count_ExportedValues, 9] = frame.getY_axis();
                 exportValues[count_ExportedValues, 1] = frame.getBitalinoFrame().getLed();
                 int[] data = frame.getBitalinoFrame().getData();
                 exportValues[count_ExportedValues, 0] = count_ExportedValues;
-                for (int i= data.Length-1; i>=0; i--)
+                for (int i = data.Length - 1; i >= 0; i--)
                 {
-                  exportValues[count_ExportedValues, channelsList[i]+1] = data[counter_data];
-                  counter_data++;
+                    exportValues[count_ExportedValues, channelsList[i] + 1] = data[counter_data];
+                    counter_data++;
                 }
                 count_ExportedValues++;
                 counter_data = 0;
             }
             exportTxtFile(exportValues);
+        }
+
+        private void exportOutputToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            exportTextFile();
         }
 
         private void exportTxtFile(int[,] toExport)
@@ -428,8 +462,12 @@ namespace BitalinoGui
                 output = ""; 
             }
             streamWriter.Close();
+            
+            if (camcontroller.getRecorderBitamaps().Count>0)
+            {
+                exportIntelRealsenseCamFrames();
+            }
         }
-
         
         private void buildCharts()
         {
@@ -523,6 +561,81 @@ namespace BitalinoGui
             }
            */
         }
+
+        public void setPictureBoxRgb(Bitmap bitmap)
+        {
+            this.pictureBox_rgb.Image = bitmap;
+        }
+
+        public void setPictureBoxDepth(Bitmap bitmap)
+        {
+            this.pictureBox_depth.Image = bitmap;
+        }
+
+        private DialogResult informUserAboutCamera()
+        {
+            DialogResult result = MessageBox.Show("Intel real sense camera is not connected on this device.Do you want to start bitalino recording without the camera?", "Question", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+            return result;
+        }
+
+        private void intelCamCbox_CheckedChanged(object sender, EventArgs e)
+        {
+           // camcontroller = new CameraController(this);
+        }
+        private void exportIntelRealsenseCamFrames()
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Title = "Choose path to save camera's output";
+            dialog.Filter = "Text File | *.txt";
+            // Show the FolderBrowserDialog.
+            DialogResult result = dialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                string folderName = dialog.FileName;
+                int seq = 0;
+                System.IO.StreamWriter streamWriter = new System.IO.StreamWriter(folderName);
+                string output = "";
+                foreach (String frame in camcontroller.getRecorderBitamaps())
+                {
+                    output= frame;
+                    streamWriter.WriteLine(output);
+                    seq++;
+                }
+                streamWriter.Close();
+            }
+        }
+
+        private void startCamBttn_Click(object sender, EventArgs e)
+        {
+            if (camcontroller==null)
+            {
+                camcontroller = new CameraController(this);
+            }
+            camcontroller.loopCamera_Frames();
+            stopCamBttn.Enabled = true;
+        }
+
+        private void stopCamBttn_Click(object sender, EventArgs e)
+        {
+            camcontroller.cancelCameraRecording();
+        }
+
+        private String getPathToSaveCamFrames()
+        {
+            String path = "";
+            SaveFileDialog videoDialog = new SaveFileDialog();
+            //videoDialog.Filter= "Avi File | *.avi";
+            DialogResult result = videoDialog.ShowDialog();
+            if (result==DialogResult.OK)
+            {
+                path = videoDialog.FileName;
+            }
+            return path;
+        }
+
+
+
     }
 }
 

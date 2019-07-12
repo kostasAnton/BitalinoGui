@@ -1,10 +1,11 @@
 ﻿using BitalinoGui.Controller;
+using Intel.RealSense;
 using SharpDX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
- 
+
 
 
 namespace BitalinoGui
@@ -29,7 +30,7 @@ namespace BitalinoGui
             Thread detectiveMonk = new Thread(start_detect);
             detectiveMonk.Start();
         }
-        
+
         private void detectDevices()
         {
             try
@@ -43,14 +44,14 @@ namespace BitalinoGui
                     Dictionary<string, object> props = dev.GetProperties();
                     Storekeeper.addDeviceProps(new DeviceProps(props["description"].ToString(), props["fwVersion"].ToString(),
                         props["path"].ToString(), props["productID"].ToString(), Convert.ToString(dev.GetBattery())));
-                   
+
                     graph_controller.updateMacListBox(props["path"].ToString());
-                    
+
                     dev.Dispose();
                 }
 
                 graph_controller.updateCursor_Form();
-                
+
                 return;
             }
             catch (PluxDotNet.Exception.PluxException e)
@@ -89,9 +90,9 @@ namespace BitalinoGui
                     Dictionary<string, object> props = dev.GetProperties();
                     Storekeeper.addDeviceProps(new DeviceProps(props["description"].ToString(), props["fwVersion"].ToString(),
                         props["path"].ToString(), props["productID"].ToString(), Convert.ToString(dev.GetBattery())));
-                    
+
                     graph_controller.fillSyncMacListBox(props["path"].ToString());
-                   
+
                     dev.Dispose();
                 }
                 return;
@@ -126,6 +127,21 @@ namespace BitalinoGui
                     graph_controller.fillSyncJoystickListBox(new Joystick(deviceInstance.InstanceGuid, directInput, deviceInstance.ProductName).toString());
 
                 }
+            }
+        }
+
+        public bool intelRealSenseCam_Connected()
+        {
+            using (var ctx = new Context())
+            {
+                var devices = ctx.QueryDevices();
+
+                Console.WriteLine("There are {0} connected RealSense devices.", devices.Count);
+                if (devices.Count == 0)
+                    return false;
+                else
+                    return true;
+
             }
         }
     }

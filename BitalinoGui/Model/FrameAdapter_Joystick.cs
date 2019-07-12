@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+
 namespace BitalinoGui.Model
 {
     /*
@@ -6,8 +8,8 @@ namespace BitalinoGui.Model
     */
     class FrameAdapter_Joystick
     {
-        Frame bitalinoFrame;
-        int[] joystickAxisXY=new int[2];
+        private Frame bitalinoFrame;
+        private int[] joystickAxisXY=new int[2];
 
         public FrameAdapter_Joystick(Frame bitalinoFrame)
         {

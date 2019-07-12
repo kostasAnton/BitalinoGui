@@ -32,7 +32,7 @@ namespace BitalinoGui
             int[] currentAxisTable = new int[2];
             var state = this.GetCurrentState();
             currentAxisTable[0] = state.X;
-            currentAxisTable[1] = state.Y;
+            currentAxisTable[1] = adjustX_Axis(state.Y);
             return currentAxisTable;
         }
 
@@ -50,5 +50,23 @@ namespace BitalinoGui
             return productName;
         }
 
+        private int adjustX_Axis(int Y)
+        {
+            int adjsusted_Y = 0;
+            if (Y > 32767)
+            {
+                adjsusted_Y = Y - 2 * (Y - 32767);
+                return adjsusted_Y;
+            }
+            else if (Y < 32767)
+            {
+                adjsusted_Y = Y + 2 * (32767-Y);
+                return adjsusted_Y;
+            }
+            else
+            {
+                return Y;
+            }
+        }
     }
 }

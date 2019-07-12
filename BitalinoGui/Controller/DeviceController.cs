@@ -15,9 +15,17 @@ namespace BitalinoGui.Controller
             this.device = device;
             this.worker = worker;
             device.setController(this);
+           
         }
 
-        
+        public DeviceController(MyDevice device, BackgroundWorker worker,CameraController camcontroller)
+        {
+            this.device = device;
+            this.worker = worker;
+            device.setController(this);
+            device.setCamController(camcontroller);
+        }
+
         public void setDevice(MyDevice device)
         {
             this.device = device;

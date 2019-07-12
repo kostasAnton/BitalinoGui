@@ -108,7 +108,10 @@ namespace BitalinoGui.Controller
             Application.Run(_form);
         }
 
-      
+        public DetectiveMonk getDetectiveMonk()
+        {
+            return this.monk;
+        }
 
     }
 }

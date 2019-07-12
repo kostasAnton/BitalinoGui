@@ -4,7 +4,8 @@ using System.ComponentModel;
 using System.Collections;
 using BitalinoGui.Model;
 using BitalinoGui.Controller;
-
+using System.Drawing;
+using LSL;
 namespace BitalinoGui
 {
     class MyDevice : PluxDotNet.SignalsDev
@@ -13,7 +14,8 @@ namespace BitalinoGui
         of jiystick are independable events.User can use only biltaino for recording data or combine bitalino's
         recording with real time annotaion of data with a joystick.
         */
-
+        //unique proceess id for lab recorder
+        private string guid = "98FF4C8E-5C2D-42E9-8F1B-8505643EAC2C";
         //Varaibles for Device-Bitalino
         private int freq;//sample rate
         private DeviceController controller;//background to report the progress on the GUI
@@ -27,19 +29,24 @@ namespace BitalinoGui
         private int prevSeq = -1; int manualCounter = 0;//varaibles for passing values to sample table
         private int countSample = 0;//the counter of array sample
         LabRecorderWrapper lrWrapper;//the responsible wrapper for passing data to labrecorder
+        private double clockStart;
+
         //a standar header for exporting the output of the sensor.
         private static String header = "#HEADER:(COLLUMN1:Seq_number)-(COLLUMN2:O1)-(COLLUMN3:A1)-(COLLUMN4:A2)-(COLLUMN5:A3)-(COLLUMN6:A4)-(COLLUMN7:A5)-(COLLUMN8:A6)";
+        
         //***************************************************************************************************
         //Joystick section
         private Joystick connectedJoystick;
-
+        private CameraController camcontroller;
         public MyDevice(string path, List<System.Int32> channels, int freq) : base(path)
         {
             this.freq = freq;
             this.channels = channels;
-            this.lrWrapper = new LabRecorderWrapper(channels.Count, freq);
+            this.lrWrapper = new LabRecorderWrapper(channels.Count, freq,"Bitalino Sensor","Physiological Signals",guid);
             lrWrapper.LinkLabStreamingLayer();
-            sample = new int[100, channels.Count];
+            //we are pushing samples of bitalino per hundred(100).
+            //100 rows and number of collumns = number of selected channels+(joystick's axis X and joystick's axis Y and the O1 state)
+            sample = new int[100, channels.Count+3];
         }
 
         //this constructor produces instances for detective monk who needs just the macAdress of device.
@@ -55,10 +62,16 @@ namespace BitalinoGui
             int counterChannels = 0;
             System.Console.WriteLine("{0} -", nSeq);
             FrameAdapter_Joystick frame = new FrameAdapter_Joystick(new Frame(data, nSeq, getLedLight()));
+            //assign the O1 state to the sample before procced  with further installation of the sample
             if (connectedJoystick != null)
             {
                 connectedJoystick.Acquire();
                 int[] axisTable = connectedJoystick.getAxisXY();
+                if (countSample<100)
+                { 
+                    sample[countSample, channels.Count+1] = axisTable[1];
+                    sample[countSample, channels.Count] = axisTable[0];
+                }
                 frame.setJoystickAxisXY(axisTable);
             }
             controller.reportProgress(frame);
@@ -73,8 +86,13 @@ namespace BitalinoGui
                 }
                 //the following section of  "if" places the values of bitalino sensor in order to send them
                 //to lab recorder for synchronization
+
                 if (countSample < 100)
                 {
+                    if (countSample==0)
+                    {
+                        clockStart = liblsl.local_clock();
+                    }
                     if (prevSeq == nSeq)
                     {
                         manualCounter++;
@@ -86,11 +104,15 @@ namespace BitalinoGui
                         manualCounter = 0;
                         prevSeq = nSeq;
                         sample[countSample, 0] = val;
+                        sample[countSample, channels.Count + 2] = Convert.ToInt32(ledLight);
                     }
                 }
-                else
+                else 
                 {
-                    this.lrWrapper.push(sample);
+                    //calculate the avg value of timestamps
+                    double endCLlock = liblsl.local_clock();
+                    double avgClock = (clockStart + endCLlock) / 2.0;
+                    this.lrWrapper.push(sample,avgClock);
                     countSample = 0;
                 }
                 counterChannels++;
@@ -207,6 +229,11 @@ namespace BitalinoGui
             {
                 Console.WriteLine("Exc:" + exc.Message + " --on device worker do work");
             }
+        }
+
+        public void setCamController(CameraController camcontroller)
+        {
+            this.camcontroller = camcontroller;
         }
 
         public Joystick getJoystick()

@@ -35,5 +35,10 @@ namespace BitalinoGui.View
         {
             self_assesment_chart.Series["Self Assesment Marking"].Points.Clear();
         }
+
+        private void Sam_Form_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
