@@ -14,12 +14,10 @@ C:\Users\Kostas\Desktop\BitalinoGui\BitalinoGui\bin\x64\Debug\Accord.dll
 C:\Users\Kostas\Desktop\BitalinoGui\BitalinoGui\bin\x64\Debug\Accord.Video.dll
 C:\Users\Kostas\Desktop\BitalinoGui\BitalinoGui\bin\x64\Debug\Accord.Video.FFMPEG.x64.dll
 C:\Users\Kostas\Desktop\BitalinoGui\BitalinoGui\bin\x64\Debug\Intel.RealSense.dll
-C:\Users\Kostas\Desktop\BitalinoGui\BitalinoGui\bin\x64\Debug\plux.dll
 C:\Users\Kostas\Desktop\BitalinoGui\BitalinoGui\bin\x64\Debug\SharpDX.DirectInput.dll
 C:\Users\Kostas\Desktop\BitalinoGui\BitalinoGui\bin\x64\Debug\Accord.xml
 C:\Users\Kostas\Desktop\BitalinoGui\BitalinoGui\bin\x64\Debug\Accord.Video.xml
 C:\Users\Kostas\Desktop\BitalinoGui\BitalinoGui\bin\x64\Debug\Accord.Video.FFMPEG.x64.xml
-C:\Users\Kostas\Desktop\BitalinoGui\BitalinoGui\bin\x64\Debug\plux.xml
 C:\Users\Kostas\Desktop\BitalinoGui\BitalinoGui\bin\x64\Debug\SharpDX.DirectInput.pdb
 C:\Users\Kostas\Desktop\BitalinoGui\BitalinoGui\bin\x64\Debug\SharpDX.DirectInput.xml
 C:\Users\Kostas\Desktop\BitalinoGui\BitalinoGui\obj\x64\Debug\BitalinoGui.csprojAssemblyReference.cache

@@ -290,8 +290,8 @@ namespace BitalinoGui
         */
         private void deviceWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            //MessageBox.Show("Completed");
-            exportTextFile();
+            MessageBox.Show("Completed");
+            //exportTextFile();
             camcontroller.cancelCameraRecording();
             exportOutputToolStripMenuItem.Visible = true;
         }
@@ -413,8 +413,8 @@ namespace BitalinoGui
             foreach (FrameAdapter_Joystick frame in toExport)
             {
                 //place the values of joystick first
-                exportValues[count_ExportedValues, 8] = frame.getX_axis();
-                exportValues[count_ExportedValues, 9] = frame.getY_axis();
+                exportValues[count_ExportedValues, 9] = frame.getX_axis();
+                exportValues[count_ExportedValues, 10] = frame.getY_axis();
                 exportValues[count_ExportedValues, 1] = frame.getBitalinoFrame().getLed();
                 int[] data = frame.getBitalinoFrame().getData();
                 exportValues[count_ExportedValues, 0] = count_ExportedValues;
@@ -451,10 +451,10 @@ namespace BitalinoGui
             System.IO.StreamWriter streamWriter = new System.IO.StreamWriter(path);
             string output = "";
             streamWriter.WriteLine(MyDevice.getHeader());
-            for (int i = 0; i < toExport.GetUpperBound(0); i++)
+            for (int i = 0; i <= toExport.GetUpperBound(0); i++)
             {
                 String space = "\t";
-                for (int j = 0; j < toExport.GetUpperBound(1); j++)
+                for (int j = 0; j <= toExport.GetUpperBound(1); j++)
                 {
                     output += toExport[i, j].ToString()+space;
                 }

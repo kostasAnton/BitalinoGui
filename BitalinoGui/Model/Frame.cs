@@ -11,7 +11,6 @@ namespace BitalinoGui
         private int sequence_number;
         private int[] data;
         private int led;
-
         public Frame(int[] data,int sequence_number,bool led)
         {
             this.data = data;
@@ -41,7 +40,7 @@ namespace BitalinoGui
         {
             return this.led;
         }
-
+        
         public String toString()
         {
             String dataToString = Convert.ToString(sequence_number)+"\t"+"O1 port(state):"+Convert.ToString(led);

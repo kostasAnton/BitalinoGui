@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using BitalinoGui.Controller;
 using LSL;
 using Accord.Video.FFMPEG;
+using System.Globalization;
 
 namespace BitalinoGui.Model
 {
@@ -34,7 +35,7 @@ namespace BitalinoGui.Model
         public IntelRealSence_Cam(CameraController cameraController)
         {
             this.camera_controller = cameraController;
-            this.camera_labWrapper = new LabRecorderWrapper(2,"IntelRealSense Camera","Bitmaps",guid);
+            this.camera_labWrapper = new LabRecorderWrapper(2,"IntelRealSense Camera","Sequnce Number of frames",guid,liblsl.channel_format_t.cf_string);
             camera_labWrapper.LinkLabStreamingLayer();
         }
 
@@ -44,10 +45,9 @@ namespace BitalinoGui.Model
             {
                 pipeline = new Pipeline();
                 colorizer = new Colorizer();
-
                 var cfg = new Config();
-                cfg.EnableStream(Stream.Depth, 640, 480, Format.Z16, 60);
-                cfg.EnableStream(Stream.Color, 640, 480, Format.Bgr8, 60);
+                cfg.EnableStream(Stream.Depth, 640, 480, Format.Z16, 30);
+                cfg.EnableStream(Stream.Color, 640, 480, Format.Bgr8, 30);
                 applyRecordingConfig();
                 pipeline.Start(cfg);
                 
@@ -82,18 +82,15 @@ namespace BitalinoGui.Model
                         Bitmap bmpDepth = new Bitmap(colorized_depth.Width, colorized_depth.Height, colorized_depth.Stride, System.Drawing.Imaging.PixelFormat.Format24bppRgb, colorized_depth.Data);
                         vidWriter_Depth.WriteVideoFrame(bmpDepth);
                         
-                        Console.WriteLine(Convert.ToString("Intel frame numeric:"+color_frame.Number));
-                        // camera_controller.getRecorderBitamaps().Add(bmpDepth);
+                        Console.WriteLine(Convert.ToString("RGB Intel frame numeric:"+color_frame.Number)+"--"+ Convert.ToString("Depth Intel frame numeric:" + depth_frame.Number));
                         camera_controller.uploadBitmap(bmpColor,true);
                         camera_controller.uploadBitmap(bmpDepth, false);
                         String[] sample = new String[2];
-                        //sample[0] = "" + Convert.ToString(colorized_depth.Number) + "_" + Convert.ToString(colorized_depth.Timestamp);
-                        //sample[1] = "" + Convert.ToString(color_frame.Number) + "_" + Convert.ToString(color_frame.Timestamp);
-
-                        sample[0] = Convert.ToString(colorized_depth.Number);
-                        sample[1] = Convert.ToString(color_frame.Number);
-
-                        camera_labWrapper.push(sample);
+                        sample[0] = "" + Convert.ToString(colorized_depth.Number) + "_" + Convert.ToString(colorized_depth.Timestamp);
+                        sample[1] = "" + Convert.ToString(color_frame.Number) + "_" + Convert.ToString(color_frame.Timestamp);
+                        //sample[0] = Convert.ToString(colorized_depth.Number);
+                        //sample[1] = Convert.ToString(color_frame.Number);
+                        camera_labWrapper.push(sample,liblsl.local_clock());
                     }
                 });
 
@@ -145,7 +142,7 @@ namespace BitalinoGui.Model
                 vidWriter_Depth.Width = 640;
                 vidWriter_Depth.Height = 480;
                 vidWriter_Depth.VideoCodec = VideoCodec.H264;
-                //vidWriter_Depth.VideoOptions["crf"] = "17";
+                //vidWriter_Depth.VideoOptions["crf"] = "17";;
                 //vidWriter_Depth.VideoOptions["preset"] = "ultrafast";
                 vidWriter_Depth.Open(save_path+"_Depth.avi");
 
@@ -158,5 +155,6 @@ namespace BitalinoGui.Model
                 vidWriter_Color.Open(save_path+"_Color.avi");
             
         }
+
     }
 }

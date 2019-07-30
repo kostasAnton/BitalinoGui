@@ -16,23 +16,25 @@ namespace BitalinoGui
         private liblsl.StreamOutlet lslOutlet = null; // The Streaming Outlet
         private int lslChannelCount = 0; // Number of Channels to Stream by Default
 
-        private const liblsl.channel_format_t lslChannelFormat = liblsl.channel_format_t.cf_int16; // Stream Variable Format
+        private liblsl.channel_format_t lslChannelFormat; // Stream Variable Format
 
-        public LabRecorderWrapper(int channelCount,int freq,string lslStreamName,string lslStreamType,string guid)
+        public LabRecorderWrapper(int channelCount,int freq,string lslStreamName,string lslStreamType,string guid, liblsl.channel_format_t format)
         {
             this.lslChannelCount = channelCount;
             this.sampling_rate = freq;
             this.lslStreamName = lslStreamName;
             this.lslStreamType = lslStreamType;
             this.guid = guid;
+            this.lslChannelFormat = format;
         }
 
-        public LabRecorderWrapper(int channelCount,string lslStreamName, string lslStreamType, string guid)
+        public LabRecorderWrapper(int channelCount,string lslStreamName, string lslStreamType, string guid, liblsl.channel_format_t format)
         {
             this.lslChannelCount = channelCount;
             this.lslStreamName = lslStreamName;
             this.lslStreamType = lslStreamType;
             this.guid = guid;
+            this.lslChannelFormat = format;
         }
 
         public void LinkLabStreamingLayer()
@@ -45,14 +47,15 @@ namespace BitalinoGui
             }
         }
         //a method for pushing samples of data to labrecorder
-        public void push(int[,] sample,double clock)
+        public void push(int[,] sample,double tstamp)
         {
-            lslOutlet.push_chunk(sample);
+            //lslOutlet.push_chunk(sample);
+            lslOutlet.push_chunk(sample,tstamp);
         }
 
-        public void push(string[] sample)
+        public void push(string[] sample,double tstamp)
         {
-            lslOutlet.push_sample(sample,liblsl.local_clock());
+            lslOutlet.push_sample(sample);
         }
 
     }

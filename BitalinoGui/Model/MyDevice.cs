@@ -6,6 +6,8 @@ using BitalinoGui.Model;
 using BitalinoGui.Controller;
 using System.Drawing;
 using LSL;
+using System.Globalization;
+
 namespace BitalinoGui
 {
     class MyDevice : PluxDotNet.SignalsDev
@@ -29,7 +31,7 @@ namespace BitalinoGui
         private int prevSeq = -1; int manualCounter = 0;//varaibles for passing values to sample table
         private int countSample = 0;//the counter of array sample
         LabRecorderWrapper lrWrapper;//the responsible wrapper for passing data to labrecorder
-        private double clockStart;
+        
 
         //a standar header for exporting the output of the sensor.
         private static String header = "#HEADER:(COLLUMN1:Seq_number)-(COLLUMN2:O1)-(COLLUMN3:A1)-(COLLUMN4:A2)-(COLLUMN5:A3)-(COLLUMN6:A4)-(COLLUMN7:A5)-(COLLUMN8:A6)";
@@ -42,11 +44,11 @@ namespace BitalinoGui
         {
             this.freq = freq;
             this.channels = channels;
-            this.lrWrapper = new LabRecorderWrapper(channels.Count, freq,"Bitalino Sensor","Physiological Signals",guid);
+            this.lrWrapper = new LabRecorderWrapper(channels.Count+3, freq,"Bitalino Sensor","Physiological Signals",guid,liblsl.channel_format_t.cf_int32);
             lrWrapper.LinkLabStreamingLayer();
             //we are pushing samples of bitalino per hundred(100).
             //100 rows and number of collumns = number of selected channels+(joystick's axis X and joystick's axis Y and the O1 state)
-            sample = new int[100, channels.Count+3];
+            sample = new int[100,channels.Count+3];
         }
 
         //this constructor produces instances for detective monk who needs just the macAdress of device.
@@ -57,10 +59,10 @@ namespace BitalinoGui
         /*
          This event occurs when a new bitalino frame is obtained.
              */
+        double clockStart;
         public override bool OnRawFrame(int nSeq, int[] data)
         {
-            int counterChannels = 0;
-            System.Console.WriteLine("{0} -", nSeq);
+            System.Console.Write("{0} -", nSeq);
             FrameAdapter_Joystick frame = new FrameAdapter_Joystick(new Frame(data, nSeq, getLedLight()));
             //assign the O1 state to the sample before procced  with further installation of the sample
             if (connectedJoystick != null)
@@ -69,55 +71,40 @@ namespace BitalinoGui
                 int[] axisTable = connectedJoystick.getAxisXY();
                 if (countSample<100)
                 { 
-                    sample[countSample, channels.Count+1] = axisTable[1];
-                    sample[countSample, channels.Count] = axisTable[0];
+                    sample[countSample,channels.Count+1] = axisTable[1];
+                    sample[countSample,channels.Count] = axisTable[0];
                 }
                 frame.setJoystickAxisXY(axisTable);
             }
             controller.reportProgress(frame);
-            foreach (int val in data)
+            //get start time of chunk proccesing.
+            if (countSample == 0)
             {
-               System.Console.WriteLine("{0}", val);
+                clockStart = liblsl.local_clock();
+            }
+            for (int i= 0; i< data.Length; i++)
+            {
+               System.Console.Write("{0}", data[i]);
                 if (controller.getWorker().CancellationPending)
                 {
                     this.Stop();
                     this.Dispose();
                     return true;
                 }
-                //the following section of  "if" places the values of bitalino sensor in order to send them
-                //to lab recorder for synchronization
-
-                if (countSample < 100)
-                {
-                    if (countSample==0)
-                    {
-                        clockStart = liblsl.local_clock();
-                    }
-                    if (prevSeq == nSeq)
-                    {
-                        manualCounter++;
-                        sample[countSample, manualCounter] = val;
-                        countSample++;
-                    }
-                    else
-                    {
-                        manualCounter = 0;
-                        prevSeq = nSeq;
-                        sample[countSample, 0] = val;
-                        sample[countSample, channels.Count + 2] = Convert.ToInt32(ledLight);
-                    }
-                }
-                else 
-                {
-                    //calculate the avg value of timestamps
-                    double endCLlock = liblsl.local_clock();
-                    double avgClock = (clockStart + endCLlock) / 2.0;
-                    this.lrWrapper.push(sample,avgClock);
-                    countSample = 0;
-                }
-                counterChannels++;
-                System.Console.WriteLine();
+                sample[countSample,i] = data[i];
+                sample[countSample, channels.Count + 2] = Convert.ToInt32(ledLight);
+               
             }
+            countSample++;
+            if (countSample==100)
+            {
+                //calculate the avg value of timestamps
+                double endCLlock = liblsl.local_clock();
+                double avgClock = (clockStart + endCLlock) / 2.0;
+                this.lrWrapper.push(sample, avgClock);
+                countSample = 0;
+            }
+            System.Console.WriteLine();
             return false;
         }
 
