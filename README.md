@@ -1,6 +1,7 @@
 # BitalinoGui -  Project in which I worked during my erasmmus placement 
 A  project for recording the process of multiple IOT devices.The main idea is to detect emotion responses when a subject is hearing music.
 Devices that project depends on and capabilities:
+
 1)Bitalino Sensor physioological signlas collection
 
 2)Intel Real Sense capture depth video
