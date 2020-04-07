@@ -15,9 +15,13 @@ lab recorder->https://github.com/sccn/labstreaminglayer/wiki
 
 To  set this up:
 1.You  need a bitalino sensor kit the ble edition.
+
 2.Lab recorder  on the background.Start the middlewear(you will see a graphical user interface)
+
 3.Launch bitalino gui app, start the recording process by choosing devices you want to record by the corresponding list boxes.
+
 4.Go to lab recorder and check the devices in lab recorder you want to capture and synchronize frames
+
 5.Start music on the background using the load button from menu (bitalino gui)
 
 Now all frames are tagged for every song and pushed to lab recorder for sync.At the end you can also export a txt file with the data from 
