@@ -14,6 +14,7 @@ Devices that project depends on and capabilities:
 lab recorder->https://github.com/sccn/labstreaminglayer/wiki
 
 To  set this up:
+
 1.You  need a bitalino sensor kit the ble edition.
 
 2.Lab recorder  on the background.Start the middlewear(you will see a graphical user interface)
