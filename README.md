@@ -24,7 +24,8 @@ To  set this up:
 
 4.Go to lab recorder and check the devices in lab recorder you want to capture and synchronize frames
 
-5.Start music on the background using the load button from menu (bitalino gui)
+5.Make sure that the led light sensor is connected to bitalino.Now you can start music on the background using the load button from menu (bitalino gui)
 
-Now all frames are tagged for every song and pushed to lab recorder for sync.At the end you can also export a txt file with the data from 
-from bitalino Gui
+Now all frames are tagged for every song and pushed to lab recorder for sync.At the end you can also export a txt file with the data from  bitalino Gui.
+
+
